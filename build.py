@@ -161,7 +161,7 @@ for h, n in sorted(leftover.items(), key=lambda x: -x[1]):
     print(f"  {n:4d} {h}")
 
 # ---------------------------------------------------------------- newsletter form -> Formspree
-FORMSPREE_ID = os.environ.get("FORMSPREE_ID", "FORMSPREE_ID_PLACEHOLDER")
+WEB3FORMS_KEY = os.environ.get("WEB3FORMS_KEY", "WEB3FORMS_KEY_PLACEHOLDER")
 FORM_SCRIPT = """
 <script>
 (function(){
@@ -188,11 +188,15 @@ for p in pages:
         continue
     t = re.sub(r'<div class="w-form">(\s*<form[^>]*c-newsletter-cta-form)', r'<div class="newsletter-form-wrap">\1', t)
     t = re.sub(r'<form[^>]*c-newsletter-cta-form[^>]*>',
-               lambda m: m.group(0).replace('method="get"', 'method="post" action="https://formspree.io/f/' + FORMSPREE_ID + '"'), t)
+               lambda m: m.group(0).replace('method="get"', 'method="post" action="https://api.web3forms.com/submit"')
+                         + '<input type="hidden" name="access_key" value="' + WEB3FORMS_KEY + '">'
+                         + '<input type="hidden" name="subject" value="New newsletter signup on julianbeing.com">'
+                         + '<input type="hidden" name="from_name" value="julianbeing.com">'
+                         + '<input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off">', t)
     t = t.replace("</body>", FORM_SCRIPT + "</body>")
     p.write_text(t, encoding="utf-8")
     form_pages += 1
-print("forms rewired on", form_pages, "pages ->", FORMSPREE_ID)
+print("forms rewired on", form_pages, "pages -> web3forms key", WEB3FORMS_KEY[:8])
 
 # ---------------------------------------------------------------- x.html -> x/index.html (unambiguous clean urls)
 moved = 0
