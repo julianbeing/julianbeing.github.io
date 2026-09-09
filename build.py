@@ -160,8 +160,8 @@ print("external hosts still referenced:")
 for h, n in sorted(leftover.items(), key=lambda x: -x[1]):
     print(f"  {n:4d} {h}")
 
-# ---------------------------------------------------------------- newsletter form -> Formspree
-WEB3FORMS_KEY = os.environ.get("WEB3FORMS_KEY", "WEB3FORMS_KEY_PLACEHOLDER")
+# ---------------------------------------------------------------- newsletter form -> Brevo
+BREVO_ACTION = "https://29db0694.sibforms.com/serve/MUIFAHVRO_p3WwaDrgjCioMaDLOdzPabLgVFtkXiCDpRvYieYx6axPsveEIZPZr-Do0PIpI7deZem5s7oi61NE_QL2iGdg2Si9VjtnIuPBSR5AjYbAjJ7seEN_HJ8C_keVwux5w5LgsnSQy1jdSxGxtXrshcDokVnKkfouVLPDPTx1C2Hm80UTwaR6Bsu4OPi3H1iJOytkPNIt9g8g=="
 FORM_SCRIPT = """
 <script>
 (function(){
@@ -172,8 +172,9 @@ FORM_SCRIPT = """
       var done = wrap.querySelector('.w-form-done'), fail = wrap.querySelector('.w-form-fail');
       var btn = form.querySelector('input[type=submit]'); var label = btn.value;
       btn.value = btn.getAttribute('data-wait') || label; btn.disabled = true;
-      fetch(form.action, {method:'POST', body:new FormData(form), headers:{'Accept':'application/json'}})
-        .then(function(r){ if(!r.ok) throw new Error(r.status);
+      fetch(form.action + '?isAjax=1', {method:'POST', body:new FormData(form)})
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return {ok:r.ok, j:j}; }); })
+        .then(function(x){ if(!x.ok || (x.j && x.j.errors)) throw new Error('brevo');
           form.style.display='none'; if(done) done.style.display='block'; if(fail) fail.style.display='none'; })
         .catch(function(){ if(fail) fail.style.display='block'; btn.value = label; btn.disabled = false; });
     });
@@ -188,15 +189,17 @@ for p in pages:
         continue
     t = re.sub(r'<div class="w-form">(\s*<form[^>]*c-newsletter-cta-form)', r'<div class="newsletter-form-wrap">\1', t)
     t = re.sub(r'<form[^>]*c-newsletter-cta-form[^>]*>',
-               lambda m: m.group(0).replace('method="get"', 'method="post" action="https://api.web3forms.com/submit"')
-                         + '<input type="hidden" name="access_key" value="' + WEB3FORMS_KEY + '">'
-                         + '<input type="hidden" name="subject" value="New newsletter signup on julianbeing.com">'
-                         + '<input type="hidden" name="from_name" value="julianbeing.com">'
-                         + '<input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off">', t)
+               lambda m: m.group(0).replace('method="get"', 'method="post" action="' + BREVO_ACTION + '"')
+                         + '<input type="text" name="email_address_check" value="" style="display:none" tabindex="-1" autocomplete="off">'
+                         + '<input type="hidden" name="locale" value="en">', t)
+    # field names Brevo expects
+    t = re.sub(r'(<form[^>]*c-newsletter-cta-form.*?</form>)',
+               lambda m: m.group(1).replace('name="name"', 'name="FIRSTNAME"').replace('name="email"', 'name="EMAIL"'),
+               t, flags=re.S)
     t = t.replace("</body>", FORM_SCRIPT + "</body>")
     p.write_text(t, encoding="utf-8")
     form_pages += 1
-print("forms rewired on", form_pages, "pages -> web3forms key", WEB3FORMS_KEY[:8])
+print("forms rewired on", form_pages, "pages -> brevo")
 
 # ---------------------------------------------------------------- x.html -> x/index.html (unambiguous clean urls)
 moved = 0
