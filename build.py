@@ -194,7 +194,7 @@ for p in pages:
                          + '<input type="hidden" name="locale" value="en">', t)
     # field names Brevo expects
     t = re.sub(r'(<form[^>]*c-newsletter-cta-form.*?</form>)',
-               lambda m: m.group(1).replace('name="name"', 'name="FIRSTNAME"').replace('name="email"', 'name="EMAIL"'),
+               lambda m: re.sub(r'name="(?:name|name-2)"', 'name="FIRSTNAME"', re.sub(r'name="(?:email|email-2)"', 'name="EMAIL"', m.group(1))),
                t, flags=re.S)
     t = t.replace("</body>", FORM_SCRIPT + "</body>")
     p.write_text(t, encoding="utf-8")
