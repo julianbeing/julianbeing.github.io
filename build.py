@@ -214,7 +214,7 @@ for p in sorted(OUT.rglob("index.html")):
     rel = p.relative_to(OUT).parent.as_posix()
     if rel.startswith("cdn"):
         continue
-    urls.append(DOMAIN + ("/" if rel == "." else "/" + rel))
+    urls.append(DOMAIN + ("/" if rel == "." else "/" + rel + "/"))
 (OUT / "sitemap.xml").write_text(
     '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     + "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls) + "</urlset>\n", encoding="utf-8")
@@ -332,3 +332,14 @@ for p in html_files:
     p.write_text(t, encoding="utf-8")
     st_pages += 1
 print("sharethis removed on", st_pages, "pages; share buttons on posts")
+
+
+# ---- internal links: trailing slash, avoids a 301 per click on GitHub Pages
+SLASH = re.compile(r'href="(/(?:[A-Za-z0-9\-]+/)*[A-Za-z0-9\-]+)(?=["#?])')
+n_slash = 0
+for p in OUT.rglob("*.html"):
+    t = p.read_text(encoding="utf-8")
+    t2, k = SLASH.subn(lambda m: 'href="' + m.group(1) + "/", t)
+    if k:
+        p.write_text(t2, encoding="utf-8"); n_slash += k
+print("internal links given trailing slash:", n_slash)
