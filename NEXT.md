@@ -13,6 +13,8 @@ Noch Single-Opt-in: Brevo verlangt für Bestätigungsmails ein aktiviertes Trans
 3. Claude: nach ~1 h "Enforce HTTPS" im Repo aktivieren (`gh api -X PUT repos/julianbeing/julianbeing.github.io/pages -f https_enforced=true`), Site prüfen.
 4. Julian: 24 h warten, Webflow kündigen, in Cookiebot ShareThis entfernen.
 
+Erledigt 2026-09-11: Cookiebot auf manuellen Modus (Auto-Blocking hielt jQuery-ready fest → Slider/Dropdown/Nav tot, sobald die Cookiebot-Config nicht lädt); GA4 als "statistics", YouTube/Embedly-iframes als "marketing" gegated. Nav-Flash und Hintergrundbilder auf Unterseiten gefixt.
+
 Erledigt 2026-09-10: Calendly auf Free (1 Event-Typ, keine Stripe-Zahlung; falls je nötig → Cal.com Free mit Stripe). "Schedule a call" im Flyout-Menü → calendly.com/julianbeing, bleibt bewusst drin. CNAME gepusht, Custom Domain im Repo gesetzt; julianbeing.github.io leitet daher bis zum DNS-Wechsel auf Webflow um, Vorschau nur lokal.
 
 Vorschau lokal: `python3 serve.py` → http://127.0.0.1:8765 (beenden mit `pkill -f serve.py`).

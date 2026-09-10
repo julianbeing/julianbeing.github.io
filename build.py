@@ -134,6 +134,16 @@ def rewrite_html(text: str, rel: str) -> str:
         text = re.sub(r'href="[^"]*\?' + key + r'_page=(\d+)"', lambda m: f'href="{clean_base}/page-{m.group(1)}"', text)
     # css was rewritten -> subresource-integrity hashes no longer match
     text = re.sub(r'\s+integrity="[^"]*"', "", text)
+    # Cookiebot: auto-blocking mode holds jQuery's ready event until its config loads, and Webflow's
+    # sliders/dropdowns/nav never init if that fails (e.g. unauthorized domain). Switch to manual mode
+    # and gate the only consent-relevant assets explicitly: GA4 (statistics), YouTube/Embedly (marketing).
+    text = text.replace(' data-blockingmode="auto"', "")
+    text = re.sub(r'<script async="" src="/9i1h[^"]*"></script>', "", text)  # webflow's proxied GA loader
+    text = text.replace('<script type="text/javascript">window.dataLayer = window.dataLayer || [];',
+                        '<script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-1NKN9NVK10"></script>'
+                        '<script type="text/plain" data-cookieconsent="statistics">window.dataLayer = window.dataLayer || [];')
+    text = re.sub(r'<iframe src="(https://(?:www\.youtube\.com|cdn\.embedly\.com)/[^"]*)"',
+                  r'<iframe data-cookieconsent="marketing" data-src="\1"', text)
     text = re.sub(r'(<link[^>]*rel="stylesheet"[^>]*)\s+crossorigin="[^"]*"', r"\1", text)
     # webflow-internal beacon script (site-specific hashed path, 404s offline)
     text = re.sub(r'<script[^>]*9i1h7htkfq16[^>]*>\s*</script>', "", text)
