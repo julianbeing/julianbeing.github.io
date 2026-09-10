@@ -9,7 +9,7 @@ Noch Single-Opt-in: Brevo verlangt für Bestätigungsmails ein aktiviertes Trans
 
 ## Nächste Schritte
 1. Julian: Webflow Site Settings → Forms → CSV exportieren (alte Anmeldungen), in Brevo importieren.
-2. Julian: Calendly-URL nennen (Coaching-Seite verlinkt bisher nur calendly.com).
+2. Julian: Calendly-URL nennen (Coaching-Seite verlinkt bisher nur calendly.com). Calendly seit 2026-09-10 auf Free (1 aktiver Event-Typ, keine Stripe-Zahlung); falls Zahlung nötig → Cal.com Free mit Stripe.
 3. Claude: `CNAME=1 python3 build.py`, pushen, Custom Domain im Repo setzen, DNS-Einträge für Namecheap liefern.
 4. Julian: DNS bei Namecheap umstellen, 24 h warten, Webflow kündigen, in Cookiebot ShareThis entfernen.
 
