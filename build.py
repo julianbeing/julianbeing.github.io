@@ -119,7 +119,8 @@ def rewrite_html(text: str, rel: str) -> str:
     # absolute self links -> root-relative
     text = SELF_ABS.sub("", text)
     # wget mangled inline style urls: url(https://julianbeing.com/&quot;https://cdn...&quot;)
-    text = text.replace("url(/&quot;", "url(&quot;")
+    # (subpages get url(/blog/&quot;..., url(/authors/&quot;... etc.)
+    text = re.sub(r'url\(/[a-z-]*/?&quot;', "url(&quot;", text)
     # local .html links -> clean urls
     def clean(m):
         p = posixpath.normpath(posixpath.join(posixpath.dirname(rel), m.group(2)))
