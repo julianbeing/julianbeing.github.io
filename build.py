@@ -343,6 +343,39 @@ for p in html_files:
     st_pages += 1
 print("sharethis removed on", st_pages, "pages; share buttons on posts")
 
+# ---------------------------------------------------------------- nav FOUC: pre-JS state of the "Nav bar scrolling" interaction
+# Webflow IX2 sets the transparent top-of-page nav (white brand, hidden menu, shade moved up) only after
+# webflow.js runs, so a reload flashes the white "scrolled" navbar. Bind the keyframe-0 state via CSS
+# until IX2 adds html.w-mod-ix, on exactly the pages the interaction is bound to (PAGE targets in IX2 data).
+NAV_BASE = """html.w-mod-js:not(.w-mod-ix) .brand{color:#fff}
+html.w-mod-js:not(.w-mod-ix) .nav-menu{height:0%}
+html.w-mod-js:not(.w-mod-ix) .left-nav{border-color:rgba(239,239,247,0)}
+html.w-mod-js:not(.w-mod-ix) .navigation-shade{transform:translate3d(0,-100%,0)}
+"""
+# a-3 family "Nav bar scrolling | Background image hero": bound per page id
+NAV_HERO_PAGES = {"615eefd2562790b8cfc16f15", "615eefd256279074f6c16f26", "615eefd25627900872c16f1b",
+                  "615eefd256279033b8c16f25", "615eefd256279078c1c16f20", "615eefd25627903889c16f39",
+                  "615eefd25627908b47c16f1f", "615eefd25627902570c16f1e", "615eefd2562790f07cc16f1d",
+                  "615eefd256279085e5c16f30", "61fec16fa5a14e1c4ff2a501", "667955ee6691a142ef189ab0",
+                  "60f94ba38b7854d6ca7e079f", "60737b4003881b718b7b5fa7"}
+NAV_HERO_CSS = "<style>" + NAV_BASE + """html.w-mod-js:not(.w-mod-ix) .nav-button-toggle{color:#fff}
+html.w-mod-js:not(.w-mod-ix) .dropdown-lottie{filter:invert(100%)}</style>"""
+# a-45 "Nav bar scrolling | Left Background image": category pages
+NAV_CAT_PAGES = {"615eefd2562790f15dc16f27"}
+NAV_CAT_CSS = "<style>" + NAV_BASE + "html.w-mod-js:not(.w-mod-ix) .category-slider-top{height:0px}</style>"
+nav_pages = 0
+for p in OUT.rglob("*.html"):
+    t = p.read_text(encoding="utf-8")
+    m = re.search(r'data-wf-page="([^"]+)"', t)
+    if not m:
+        continue
+    css = NAV_HERO_CSS if m.group(1) in NAV_HERO_PAGES else NAV_CAT_CSS if m.group(1) in NAV_CAT_PAGES else None
+    if not css:
+        continue
+    p.write_text(t.replace("</head>", css + "</head>", 1), encoding="utf-8")
+    nav_pages += 1
+print("nav pre-js state css on", nav_pages, "pages")
+
 
 # ---- internal links: trailing slash, avoids a 301 per click on GitHub Pages
 SLASH = re.compile(r'href="(/(?:[A-Za-z0-9\-]+/)*[A-Za-z0-9\-]+)(?=["#?])')
