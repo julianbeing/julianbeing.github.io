@@ -107,6 +107,8 @@ def rewrite_common(text: str) -> str:
         fetch(url, EXT_OUT / name)
         return "/cdn/ext/" + name
     text = CLOUDFRONT.sub(cf, text)
+    # coaching booking link: live site only linked bare calendly.com
+    text = text.replace('href="https://calendly.com/"', 'href="https://calendly.com/julianbeing"')
     return text
 
 
