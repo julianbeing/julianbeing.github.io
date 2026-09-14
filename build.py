@@ -130,6 +130,9 @@ def rewrite_html(text: str, rel: str) -> str:
             return m.group(1) + "/"
         return m.group(1) + "/" + p
     text = LOCAL_HTML.sub(clean, text)
+    # root-absolute .html links left in rich text / link page (/coaching.html -> /coaching/)
+    text = re.sub(r'href="/index\.html"', 'href="/"', text)
+    text = re.sub(r'href="/([A-Za-z0-9/_-]+)\.html"', r'href="/\1/"', text)
     # pagination
     for _, (_, key, clean_base) in PAGINATED.items():
         text = re.sub(r'href="[^"]*\?' + key + r'_page=1"', f'href="{clean_base}"', text)
@@ -259,8 +262,15 @@ css_files = sorted(CDN_OUT.rglob("*.css"))
 # ---- og:image / twitter:image must be absolute for social scrapers
 for p in html_files:
     t = p.read_text(encoding="utf-8")
+    # webflow emits content= before property=, handle both attribute orders
     t2 = re.sub(r'(property="og:image" content=")/cdn/', r'\1' + DOMAIN + '/cdn/', t)
     t2 = re.sub(r'(name="twitter:image" content=")/cdn/', r'\1' + DOMAIN + '/cdn/', t2)
+    t2 = re.sub(r'(<meta content=")/cdn/([^"]*" (?:property="og:image"|name="twitter:image"))', r'\1' + DOMAIN + r'/cdn/\2', t2)
+    # canonical + og:url (webflow's canonical pointed at the old host and was stripped)
+    if p.name != "404.html" and 'rel="canonical"' not in t2:
+        rel = p.relative_to(OUT).parent.as_posix()
+        url = DOMAIN + ("/" if rel == "." else "/" + rel + "/")
+        t2 = t2.replace("</head>", f'<link rel="canonical" href="{url}"/><meta property="og:url" content="{url}"/></head>', 1)
     if t2 != t:
         p.write_text(t2, encoding="utf-8")
 
