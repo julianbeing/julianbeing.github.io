@@ -4,8 +4,10 @@ Live seit 2026-09-14 ~12:20: DNS bei Namecheap umgestellt, Zertifikat ausgestell
 Brevo: 287 Alt-Abonnenten aus dem Webflow-Export importiert (Spam/Bots vorher entfernt).
 
 ## Nächste Schritte
-1. Claude: nach dem Cookiebot-Scan (2026-09-14 angestoßen) prüfen, ob ShareThis und talk.hyvor.com aus der Live-Erklärung raus sind (Details-Tab im Banner). Gescannte Cookies lassen sich nicht manuell löschen.
-2. Optional: Brevo Double-Opt-in (Transactional-Konto per Support aktivieren, dann im Formular umstellen).
+1. Optional: Brevo Double-Opt-in (Transactional-Konto per Support aktivieren, dann im Formular umstellen).
+2. Optional: Cookiebot-Scan listet GA4 (Google) nicht mehr, weil das Tag per Consent gegated ist. Falls die Erklärung GA4 nennen soll: Cookie manuell in Cookiebot anlegen.
+
+Erledigt 2026-09-14: Cookiebot neu gescannt, ShareThis und talk.hyvor.com sind aus der Erklärung raus.
 
 Erledigt 2026-09-14: Webflow Site-Plan gekündigt (läuft 2026-09-20 aus, Account bleibt), Subdomain-Indexing für julian-being-blog.webflow.io deaktiviert.
 
