@@ -1,20 +1,13 @@
-# Stand 2026-09-09 — Umzug julianbeing.com Webflow → GitHub Pages
+# Stand 2026-09-14 — julianbeing.com läuft auf GitHub Pages
 
-Fertig: Spiegelung, Optimierung (WebP, eigene Share-Buttons), Repo `julianbeing/julianbeing.github.io`,
-Test-URL https://julianbeing.github.io läuft.
-
-Newsletter-Formular läuft über **Brevo** (gepusht 2026-09-09, Test-Anmeldung erfolgreich).
-Noch Single-Opt-in: Brevo verlangt für Bestätigungsmails ein aktiviertes Transactional-Konto
-(Support anschreiben, dann im Brevo-Formular auf Double-Opt-in umstellen; Site bleibt unverändert).
+Live seit 2026-09-14 ~12:20: DNS bei Namecheap umgestellt, Zertifikat ausgestellt, Enforce HTTPS an.
+Brevo: 287 Alt-Abonnenten aus dem Webflow-Export importiert (Spam/Bots vorher entfernt).
 
 ## Nächste Schritte
-1. Julian: Webflow Site Settings → Forms → CSV exportieren (alte Anmeldungen), in Brevo importieren.
-2. Julian: DNS bei Namecheap umstellen (Advanced DNS): ALIAS/CNAME `@`→cdn.webflow.com löschen; A `@` → 185.199.108.153 / .109.153 / .110.153 / .111.153; CNAME `www` → julianbeing.github.io; MX (Google) unverändert.
-3. Claude: nach ~1 h "Enforce HTTPS" im Repo aktivieren (`gh api -X PUT repos/julianbeing/julianbeing.github.io/pages -f https_enforced=true`), Site prüfen.
-4. Julian: 24 h warten, Webflow kündigen, in Cookiebot ShareThis entfernen.
-
-Erledigt 2026-09-11: Cookiebot auf manuellen Modus (Auto-Blocking hielt jQuery-ready fest → Slider/Dropdown/Nav tot, sobald die Cookiebot-Config nicht lädt); GA4 als "statistics", YouTube/Embedly-iframes als "marketing" gegated. Nav-Flash und Hintergrundbilder auf Unterseiten gefixt.
-
-Erledigt 2026-09-10: Calendly auf Free (1 Event-Typ, keine Stripe-Zahlung; falls je nötig → Cal.com Free mit Stripe). "Schedule a call" im Flyout-Menü → calendly.com/julianbeing, bleibt bewusst drin. CNAME gepusht, Custom Domain im Repo gesetzt; julianbeing.github.io leitet daher bis zum DNS-Wechsel auf Webflow um, Vorschau nur lokal.
+1. Julian, ab 2026-09-15: Webflow Site-Plan für julianbeing.com auf Starter (free) runterstufen (Account bleibt).
+   Danach in Webflow Site settings → SEO → "Disable Webflow subdomain indexing" aktivieren (sonst Duplikat unter julianbeing.webflow.io).
+2. Julian: in Cookiebot ShareThis aus der Cookie-Erklärung entfernen (Site nutzt eigene Share-Buttons).
+3. Optional: Brevo Double-Opt-in (Transactional-Konto per Support aktivieren, dann im Formular umstellen).
 
 Vorschau lokal: `python3 serve.py` → http://127.0.0.1:8765 (beenden mit `pkill -f serve.py`).
+Content-Änderungen: in `build.py` patchen (überschreibt `docs/`), nie mehr von Webflow neu spiegeln.
