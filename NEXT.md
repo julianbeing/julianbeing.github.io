@@ -4,8 +4,9 @@ Live seit 2026-09-14 ~12:20: DNS bei Namecheap umgestellt, Zertifikat ausgestell
 Brevo: 287 Alt-Abonnenten aus dem Webflow-Export importiert (Spam/Bots vorher entfernt).
 
 ## Nächste Schritte
-1. Optional: Brevo Double-Opt-in (Transactional-Konto per Support aktivieren, dann im Formular umstellen).
-2. Optional: Cookiebot-Scan listet GA4 (Google) nicht mehr, weil das Tag per Consent gegated ist. Falls die Erklärung GA4 nennen soll: Cookie manuell in Cookiebot anlegen.
+Keine. Migration abgeschlossen 2026-09-14.
+
+Falls später regelmäßiger Newsletter-Versand: Liste in Brevo von Bot-Mustern säubern, dann Double-Opt-in (Transactional freischalten, Formular umstellen). Cookiebot listet GA4 nicht, weil das Tag consent-gegated ist; bei Bedarf manuell anlegen.
 
 Erledigt 2026-09-14 (Abschluss-Check): Root-.html-Links in 4 Blogposts + /link repariert, og:image absolut, canonical + og:url auf allen Seiten.
 
