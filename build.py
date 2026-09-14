@@ -109,6 +109,8 @@ def rewrite_common(text: str) -> str:
     text = CLOUDFRONT.sub(cf, text)
     # coaching booking link: live site only linked bare calendly.com
     text = text.replace('href="https://calendly.com/"', 'href="https://calendly.com/julianbeing"')
+    # flyout 'Contact Me' email item still carried the Webflow template placeholder
+    text = text.replace('href="mailto:info@template.com?subject=Hey!"', 'href="mailto:julian@julianbeing.com"')
     return text
 
 
