@@ -6,7 +6,6 @@ Brevo: 287 Alt-Abonnenten aus dem Webflow-Export importiert (Spam/Bots vorher en
 ## Nächste Schritte
 1. Optional: Brevo Double-Opt-in (Transactional-Konto per Support aktivieren, dann im Formular umstellen).
 2. Optional: Cookiebot-Scan listet GA4 (Google) nicht mehr, weil das Tag per Consent gegated ist. Falls die Erklärung GA4 nennen soll: Cookie manuell in Cookiebot anlegen.
-3. Offen (Julians Entscheidung): das LinkedIn-Icon in der Seitenleiste und in der Autoren-Box zeigt auf webflow.com (Template-Rest, war auch auf der Webflow-Site so). Entweder auf ein LinkedIn-Profil zeigen lassen oder das Icon entfernen; Fix dann in build.py (`href="https://webflow.com"`).
 
 Erledigt 2026-09-14 (Abschluss-Check): Root-.html-Links in 4 Blogposts + /link repariert, og:image absolut, canonical + og:url auf allen Seiten.
 
